@@ -35,27 +35,51 @@ def user_list():
 def register_form():
     """Add a registration form that asks for an email address, pw, route that 
     shows registration form."""
-    email = "Input your email address:"
-    password ="Input your password:"
 
 
-    return render_template("register_form.html",email=email,password=password)
+    return render_template("register_form.html")
 
 @app.route("/register", methods=["POST"])
 def register_process():
 
-    Email = request.args.get("email")
-    Password = request.args.get("password")
+    Email = request.form.get("email")
+    Password = request.form.get("password")
 
-    users = User.query.filter(User.email == "Email").all()
+    print(Email)
+    print(Password)
 
+    users = User.query.filter(User.email == Email).all()
 
-    if users:
-        flash("User already exists!")
-    else:
-        db.session.add(User(email = Email, password = Password))
+    print(users)
+
+    if len(users) < 1:
+        db.session.add(User(email=Email, password=Password))
         db.session.commit()
-        return redirect("/")
+    else:
+        flash("User with email {} already exists".format(Email))
+
+
+@app.route("/login")
+def login_form():
+    """User login form"""
+
+    return render_template("login.html")
+
+@app.route("/login", methods=["POST"])
+def submit_login():
+    """Check to see if login and password exist. Then, allow user to log in."""
+
+    Email = request.form.get("email")
+    Password = request.form.get("password")
+
+    users = User.query.filter(User.email == Email, User.password == password).one()
+    
+
+    if users and usersTwo:
+
+
+
+
 
 
 if __name__ == "__main__":
