@@ -72,10 +72,22 @@ def submit_login():
     Email = request.form.get("email")
     Password = request.form.get("password")
 
-    users = User.query.filter(User.email == Email, User.password == password).one()
+    users = User.query.filter(User.email == Email, User.password == Password).one()
     
 
-    if users and usersTwo:
+    if users:
+        session["user_id"] = users.user_id
+        flash("Succesfully logged In")
+        return redirect("/")
+
+@app.route("/logout")
+def user_logout():
+    """Remove the user id from session and log out user"""
+
+    del session["user_id"]
+    flash("Logged out")
+    return redirect("/")
+
 
 
 
